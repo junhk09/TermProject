@@ -5,12 +5,17 @@ public class Player : MonoBehaviour
     public float speed;
     float hAxis;
     float vAxis;
+    float fireDelay;
     Vector3 moveVec;
     Animator anim;
     bool wDown;
     Rigidbody rigid;
     bool jDown;
     bool isJump;
+    bool iDown;
+    bool fDown;
+   public Weapon equipWeapon;
+    bool isFireReady=true;
     private void Awake()
     {
         anim = GetComponentInChildren<Animator>();
@@ -22,10 +27,21 @@ public class Player : MonoBehaviour
         Move();
         Turn();
         Jump();
+        Attack();
 
 
 
-
+    }
+   void Attack()
+    {
+        fireDelay += Time.deltaTime;
+        isFireReady = equipWeapon.rate < fireDelay;
+        if (fDown && isFireReady)
+        {
+            anim.SetTrigger("doShot");
+            StartCoroutine(equipWeapon.Shot());
+            fireDelay = 0;
+        }
     }
     void GetInput()
     {
@@ -33,6 +49,7 @@ public class Player : MonoBehaviour
         vAxis = Input.GetAxisRaw("Vertical");
         wDown = Input.GetButton("walk");
         jDown = Input.GetButtonDown("Jump");
+        fDown = Input.GetButtonDown("Fire1");
     }
     void Move()
     {

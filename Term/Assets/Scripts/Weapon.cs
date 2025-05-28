@@ -18,9 +18,10 @@ public class Weapon : MonoBehaviour
 
         GameObject instantCase = Instantiate(bulletCase, bulletCasePos.position, bulletCasePos.rotation);
         Rigidbody caseRigid = instantCase.GetComponent<Rigidbody>();
+
         Vector3 caseVec=bulletCasePos.forward * Random.Range(-3,-2)+Vector3.up* Random.Range(2, 3);
         caseRigid.AddForce(caseVec,ForceMode.Impulse);
-        caseRigid.AddTorque(Vector3.up*10,ForceMode.Impulse);
+       caseRigid.AddTorque(Vector3.up*10,ForceMode.Impulse);
        yield return null;
     }
 

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1982201878915011072}
   - component: {fileID: 1715435975744378662}
   - component: {fileID: 7760726842668985302}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Bullet Case
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -95,7 +95,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd15f12476a2aa349b5cc1be732d0462, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 0
 --- !u!1 &7217855373330546940
 GameObject:
   m_ObjectHideFlags: 0
@@ -107,7 +106,7 @@ GameObject:
   - component: {fileID: 2979576240243329835}
   - component: {fileID: 7436863238684701516}
   - component: {fileID: 5038512462700888934}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Mesh Object
   m_TagString: Untagged
   m_Icon: {fileID: 0}

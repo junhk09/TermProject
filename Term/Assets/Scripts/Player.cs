@@ -32,7 +32,11 @@ public class Player : MonoBehaviour
 
 
     }
-   void Attack()
+    private void FixedUpdate()
+    {
+        FreezeRotation();
+    }
+    void Attack()
     {
         fireDelay += Time.deltaTime;
         isFireReady = equipWeapon.rate < fireDelay;
@@ -61,9 +65,13 @@ public class Player : MonoBehaviour
     }
     void Turn()
     {
+        
         transform.LookAt(transform.position + moveVec);
     }
-
+    void FreezeRotation()
+    {
+        rigid.angularVelocity=Vector3.zero;
+    }
     void Jump()
     {
         if (jDown&&!isJump)

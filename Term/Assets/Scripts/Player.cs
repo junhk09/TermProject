@@ -1,7 +1,9 @@
 using UnityEngine;
+using Photon.Pun;
 
-public class Player : MonoBehaviour
+public class Player : MonoBehaviourPun
 {
+    
     public float speed;
     float hAxis;
     float vAxis;
@@ -23,6 +25,10 @@ public class Player : MonoBehaviour
     }
     private void Update()
     {
+        if (!photonView.IsMine)
+            return;
+
+
         GetInput();
         Move();
         Turn();

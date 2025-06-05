@@ -364,7 +364,7 @@ MonoBehaviour:
   bullet: {fileID: 4979654838222033671, guid: 4927fc2444c7f464e9c8db7e0f8b81bd, type: 3}
   bulletCasePos: {fileID: 5318702841360694548}
   bulletCase: {fileID: 4754124185322378375, guid: f6148853ee055c349b5574edd30ee31e, type: 3}
-  damage: 0
+  damage: 5
   rate: 0.2
 --- !u!4 &5448289981362206395 stripped
 Transform:

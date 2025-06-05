@@ -122,7 +122,8 @@ MonoBehaviour:
   damage: 0
   isMelee: 0
   isRock: 0
-  target: {fileID: 0}
+  target: {fileID: 8175814102350638929, guid: 8d4bda6f4b85de146a34289ffb3a706e, type: 3}
+  nav: {fileID: 7017253999374549975, guid: 4dffcc4b0525206488b587775967562f, type: 3}
 --- !u!1 &7366550616917511586
 GameObject:
   m_ObjectHideFlags: 0

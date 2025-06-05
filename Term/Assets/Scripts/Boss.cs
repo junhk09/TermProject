@@ -2,12 +2,20 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Boss : Enemy
+public class Boss : MonoBehaviour
 {
     public GameObject missile;
     public Transform missilePortA;
     public Transform missilePortB;
-
+    public Rigidbody rigid;
+    public BoxCollider boxCollider;
+    public MeshRenderer[] meshs;
+    public NavMeshAgent nav;
+    public Animator anim;
+    public Transform target;
+    public GameObject bullet;
+    public BoxCollider meleeArea;
+    public bool isDead;
     Vector3 lookVec;
     Vector3 tauntVec;
     bool isLook;
@@ -42,7 +50,10 @@ public class Boss : Enemy
         else
             nav.SetDestination(tauntVec);
     }
-
+    private void FixedUpdate()
+    {
+        FreezeRotation();
+    }
     IEnumerator Think()
     {
         yield return new WaitForSeconds(0.1f);
@@ -56,8 +67,7 @@ public class Boss : Enemy
                 break;
             case 2:
             case 3:
-                StartCoroutine(RockShot());
-                break;
+               
             case 4:
                 StartCoroutine(Taunt());
                 break;
@@ -81,7 +91,7 @@ public class Boss : Enemy
 
         StartCoroutine(Think());
     }
-
+    /*
     IEnumerator RockShot()
     {
         isLook = false;
@@ -92,7 +102,7 @@ public class Boss : Enemy
         isLook = true;
         StartCoroutine(Think());
     }
-
+    */
     IEnumerator Taunt()
     {
 
@@ -100,7 +110,7 @@ public class Boss : Enemy
 
         isLook = false;
         nav.isStopped = false;
-        boxCollider.enabled = false;
+       
         anim.SetTrigger("doTaunt");
         yield return new WaitForSeconds(1.5f);
         meleeArea.enabled = true;
@@ -115,5 +125,9 @@ public class Boss : Enemy
         meleeArea.enabled = true;
 
         StartCoroutine(Think());
+    }
+    void FreezeRotation()
+    {
+        rigid.angularVelocity = Vector3.zero;
     }
 }

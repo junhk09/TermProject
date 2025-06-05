@@ -24,7 +24,8 @@ public class cshGameManager : MonoBehaviourPun // 점수와 게임 오버 여부 및 게임 
 
     public GameObject PlayerPrefab; // 생성할 VR 플레이어 캐릭터
     public GameObject SpawnPosPrefab; // 생성할 VR 플레이어 캐릭터의 위치
-
+    public GameObject BossPrefab;
+    public GameObject BossSpawnPoint;
 
 
     private void Awake()
@@ -41,8 +42,9 @@ public class cshGameManager : MonoBehaviourPun // 점수와 게임 오버 여부 및 게임 
     {
         // 생성할 랜덤 위치 지정
         Vector3 randomSpawnPos = SpawnPosPrefab.transform.position;//Random.insideUnitSphere * 5f;
-        // 네트워크상의 모든 클라이언트에서 생성 실행  
-        // 해당 게임 오브젝트의 주도권은 생성 메서드를 직접 실행한 클라이언트에 있음
+        Vector3 randomSpawnPos1 = BossSpawnPoint.transform.position;
+        
         PhotonNetwork.Instantiate(PlayerPrefab.name, randomSpawnPos, Quaternion.identity);
+        PhotonNetwork.Instantiate(BossPrefab.name, randomSpawnPos1, Quaternion.identity);
     }
 }

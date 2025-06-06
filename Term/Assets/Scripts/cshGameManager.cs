@@ -26,7 +26,7 @@ public class cshGameManager : MonoBehaviourPun // 점수와 게임 오버 여부 및 게임 
     public GameObject SpawnPosPrefab; // 생성할 VR 플레이어 캐릭터의 위치
     public GameObject BossPrefab;
     public GameObject BossSpawnPoint;
-
+    public GameObject gameOverUI;
 
     private void Awake()
     {
@@ -42,9 +42,20 @@ public class cshGameManager : MonoBehaviourPun // 점수와 게임 오버 여부 및 게임 
     {
         // 생성할 랜덤 위치 지정
         Vector3 randomSpawnPos = SpawnPosPrefab.transform.position;//Random.insideUnitSphere * 5f;
-        Vector3 randomSpawnPos1 = BossSpawnPoint.transform.position;
+      
         
         PhotonNetwork.Instantiate(PlayerPrefab.name, randomSpawnPos, Quaternion.identity);
-        PhotonNetwork.Instantiate(BossPrefab.name, randomSpawnPos1, Quaternion.identity);
+        if (PhotonNetwork.IsMasterClient)
+        {
+            Vector3 bossSpawnPos = BossSpawnPoint.transform.position;
+            PhotonNetwork.Instantiate(BossPrefab.name, bossSpawnPos, Quaternion.identity);
+        }
+      
+    }
+    [PunRPC]
+    public void ShowGameOverUI()
+    {
+        if (gameOverUI != null)
+            gameOverUI.SetActive(true);
     }
 }

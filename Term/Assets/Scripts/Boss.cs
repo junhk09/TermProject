@@ -1,6 +1,5 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.AI;
 
 public class Boss : MonoBehaviour
 {
@@ -10,14 +9,13 @@ public class Boss : MonoBehaviour
     public Rigidbody rigid;
     public BoxCollider boxCollider;
     public MeshRenderer[] meshs;
-    public NavMeshAgent nav;
     public Animator anim;
     public Transform target;
     public GameObject bullet;
     public BoxCollider meleeArea;
     public bool isDead;
+
     Vector3 lookVec;
-    Vector3 tauntVec;
     bool isLook;
 
     void Awake()
@@ -25,10 +23,8 @@ public class Boss : MonoBehaviour
         rigid = GetComponent<Rigidbody>();
         boxCollider = GetComponent<BoxCollider>();
         meshs = GetComponentsInChildren<MeshRenderer>();
-        nav = GetComponent<NavMeshAgent>();
         anim = GetComponentInChildren<Animator>();
 
-        nav.isStopped = true;
         StartCoroutine(Think());
     }
 
@@ -47,13 +43,13 @@ public class Boss : MonoBehaviour
             lookVec = new Vector3(h, 0, v) * 5f;
             transform.LookAt(target.position + lookVec);
         }
-        else
-            nav.SetDestination(tauntVec);
     }
+
     private void FixedUpdate()
     {
         FreezeRotation();
     }
+
     IEnumerator Think()
     {
         yield return new WaitForSeconds(0.1f);
@@ -61,71 +57,38 @@ public class Boss : MonoBehaviour
         int ranAction = Random.Range(0, 5);
         switch (ranAction)
         {
-            case 0:     
+            case 0:
             case 1:
-                StartCoroutine(MissileShot());
-                break;
             case 2:
             case 3:
-               
             case 4:
-                StartCoroutine(Taunt());
+                StartCoroutine(MissileShot());
                 break;
         }
     }
+
     IEnumerator MissileShot()
     {
         anim.SetTrigger("doShot");
         yield return new WaitForSeconds(0.2f);
-        GameObject instantMissileA = Instantiate(missile, missilePortA.position, missilePortA.rotation);
-        BossMissile bossMissileA = instantMissileA.GetComponent < BossMissile>();
-        bossMissileA.target = target;
 
-        yield return new WaitForSeconds(0.3f);
-        GameObject instantMissileB = Instantiate(missile, missilePortB.position, missilePortB.rotation);
-        BossMissile bossMissileB = instantMissileB.GetComponent<BossMissile>();
-        bossMissileB.target = target;
+        // 현재 접속 중인 모든 플레이어 탐색
+        GameObject[] allPlayers = GameObject.FindGameObjectsWithTag("Player");
 
+        foreach (GameObject playerObj in allPlayers)
+        {
+            // 미사일 생성
+            GameObject instantMissile = Instantiate(missile, transform.position, transform.rotation);
+            BossMissile bossMissile = instantMissile.GetComponent<BossMissile>();
+            bossMissile.target = playerObj.transform;
+
+            yield return new WaitForSeconds(0.2f); // 약간의 간격을 줘도 됨
+        }
 
         yield return new WaitForSeconds(2f);
-
         StartCoroutine(Think());
     }
-    /*
-    IEnumerator RockShot()
-    {
-        isLook = false;
-        anim.SetTrigger("doBigShot");
-        Instantiate(bullet, transform.position, transform.rotation);
-        yield return new WaitForSeconds(3f);
 
-        isLook = true;
-        StartCoroutine(Think());
-    }
-    */
-    IEnumerator Taunt()
-    {
-
-        tauntVec = target.position + lookVec;
-
-        isLook = false;
-        nav.isStopped = false;
-       
-        anim.SetTrigger("doTaunt");
-        yield return new WaitForSeconds(1.5f);
-        meleeArea.enabled = true;
-
-        yield return new WaitForSeconds(0.5f);
-        meleeArea.enabled = false;
-
-
-        yield return new WaitForSeconds(1f);
-        isLook= true;
-        nav.isStopped = true;
-        meleeArea.enabled = true;
-
-        StartCoroutine(Think());
-    }
     void FreezeRotation()
     {
         rigid.angularVelocity = Vector3.zero;

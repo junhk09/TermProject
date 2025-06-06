@@ -1,12 +1,13 @@
 ﻿using UnityEngine;
 using Photon.Pun;
+using TMPro;
 
 public class Player : MonoBehaviourPun
 {
     public float speed;
     public int HP = 100;
-    public GameObject gameOverUI; // [↘️ Inspector에서 연결 필요]
-
+    public GameObject gameOverUI;
+    public TextMeshProUGUI hpText;
     float hAxis;
     float vAxis;
     float fireDelay;
@@ -32,7 +33,9 @@ public class Player : MonoBehaviourPun
     {
         if (photonView.IsMine)
         {
+            hpText = GameObject.Find("PlayerHP").GetComponent<TextMeshProUGUI>();
             GameObject boss = GameObject.FindWithTag("Enemy");
+          
             if (boss != null)
             {
                 boss.GetComponent<Boss>().target = this.transform;
@@ -58,8 +61,15 @@ public class Player : MonoBehaviourPun
         Turn();
         Jump();
         Attack();
+        UpdateHpUI();
     }
-
+    void UpdateHpUI()
+    {
+        if (photonView.IsMine && hpText != null)
+        {
+            hpText.text = "HP: " + HP.ToString();
+        }
+    }
     private void FixedUpdate()
     {
         FreezeRotation();

@@ -3,7 +3,7 @@ using UnityEngine;
 public class Bullet : MonoBehaviour
 {
 
-    public int damage;
+    public int damage=50;
     public bool isMelee;
     public bool isRock;
 

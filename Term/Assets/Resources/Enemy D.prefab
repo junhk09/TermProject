@@ -183,6 +183,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 249613c72438b43489f025fa320a91c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxHP: 500
   missile: {fileID: 404066672278911984, guid: 984b2439d71984b4cbdf83735ceff21b, type: 3}
   missilePortA: {fileID: 3054152377820472079}
   missilePortB: {fileID: 8239329081064292475}
@@ -194,6 +195,7 @@ MonoBehaviour:
   bullet: {fileID: 3678616825050790132, guid: baa0523a6393b8b479223e8935f8c877, type: 3}
   meleeArea: {fileID: 6507930836642060643}
   isDead: 0
+  hpBar: {fileID: 0}
 --- !u!54 &4551450914997957770
 Rigidbody:
   m_ObjectHideFlags: 0

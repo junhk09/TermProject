@@ -1,8 +1,12 @@
 using System.Collections;
 using UnityEngine;
-
-public class Boss : MonoBehaviour
+using Photon.Pun;
+using UnityEngine.UI;
+public class Boss : MonoBehaviourPun
 {
+    public int maxHP = 500;
+    private int currentHP;
+
     public GameObject missile;
     public Transform missilePortA;
     public Transform missilePortB;
@@ -14,7 +18,11 @@ public class Boss : MonoBehaviour
     public GameObject bullet;
     public BoxCollider meleeArea;
     public bool isDead;
+    [Header("Boss HP UI")]
+    public Image hpBar;
 
+   
+ 
     Vector3 lookVec;
     bool isLook;
 
@@ -25,6 +33,16 @@ public class Boss : MonoBehaviour
         meshs = GetComponentsInChildren<MeshRenderer>();
         anim = GetComponentInChildren<Animator>();
 
+        currentHP = maxHP;
+        GameObject hpBg = GameObject.Find("HPBackground");
+        if (hpBg != null)
+        {
+            Transform hpFill = hpBg.transform.Find("HPFill");
+            if (hpFill != null)
+            {
+                hpBar = hpFill.GetComponent<Image>();
+            }
+        }
         StartCoroutine(Think());
     }
 
@@ -36,7 +54,7 @@ public class Boss : MonoBehaviour
             return;
         }
 
-        if (isLook)
+        if (isLook && target != null)
         {
             float h = Input.GetAxisRaw("Horizontal");
             float v = Input.GetAxisRaw("Vertical");
@@ -72,21 +90,67 @@ public class Boss : MonoBehaviour
         anim.SetTrigger("doShot");
         yield return new WaitForSeconds(0.2f);
 
-        // 현재 접속 중인 모든 플레이어 탐색
         GameObject[] allPlayers = GameObject.FindGameObjectsWithTag("Player");
 
         foreach (GameObject playerObj in allPlayers)
         {
-            // 미사일 생성
             GameObject instantMissile = Instantiate(missile, transform.position, transform.rotation);
             BossMissile bossMissile = instantMissile.GetComponent<BossMissile>();
             bossMissile.target = playerObj.transform;
 
-            yield return new WaitForSeconds(0.2f); // 약간의 간격을 줘도 됨
+            yield return new WaitForSeconds(0.2f);
         }
 
         yield return new WaitForSeconds(2f);
         StartCoroutine(Think());
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Bullet"))
+        {
+            Bullet bullet = other.GetComponent<Bullet>();
+            if (bullet != null)
+            {
+                Debug.Log("Boss Damaged!");
+                // 테스트: 누가 맞추든 데미지 반영
+                photonView.RPC("TakeDamage", RpcTarget.AllBuffered, bullet.damage);
+            }
+
+            Destroy(other.gameObject);
+        }
+    }
+
+    [PunRPC]
+    public void TakeDamage(int damage)
+    {
+        if (isDead) return;
+
+        currentHP -= damage;
+
+
+        if (currentHP <= 0)
+        {
+            Die();
+        }
+        UpdateHpUI();
+    }
+    void UpdateHpUI()
+    {
+        if (hpBar != null)
+        {
+            hpBar.fillAmount = (float)currentHP / maxHP;
+        }
+    }
+    void Die()
+    {
+        if (isDead) return;
+
+        isDead = true;
+        anim.SetTrigger("die");
+        StopAllCoroutines();
+        cshGameManager.instance.ShowGameOverUI();
+        Destroy(gameObject, 3f);
     }
 
     void FreezeRotation()

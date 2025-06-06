@@ -13,6 +13,7 @@ public class BossMissile : Bullet
     {
         rb = GetComponent<Rigidbody>();
         rb.collisionDetectionMode = CollisionDetectionMode.Continuous; // ���� �̻��Ͽ� ����ȭ
+        Destroy(gameObject, 2f);
     }
 
     private void FixedUpdate()
@@ -35,7 +36,7 @@ public class BossMissile : Bullet
             Player player = other.GetComponent<Player>();
             if (player != null && player.photonView.IsMine)
             {
-                player.photonView.RPC("TakeDamage", RpcTarget.AllBuffered, 50); // 50 ������
+                player.photonView.RPC("TakeDamage", RpcTarget.AllBuffered, 10); // 50 ������
             }
 
             Destroy(gameObject);

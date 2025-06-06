@@ -140,6 +140,7 @@ MonoBehaviour:
   speed: 15
   HP: 100
   gameOverUI: {fileID: 0}
+  hpText: {fileID: 0}
   equipWeapon: {fileID: 9162523034176877957}
 --- !u!54 &1052294880110076347
 Rigidbody:

@@ -42,6 +42,7 @@ MonoBehaviour:
   - OnShot
   - TakeDamage
   - ShowGameOverUI
+  - ChangeColor
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

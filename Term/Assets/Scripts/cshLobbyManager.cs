@@ -27,7 +27,7 @@ public class cshLobbyManager : MonoBehaviourPunCallbacks // PUN 구현할때 overrid
     public override void OnConnectedToMaster()
     {
         joinButton.interactable = true;
-        connectionInfoText.text = "Online: Connected to Master Server";
+        connectionInfoText.text = "Boss Breaker";
         //base.OnConnectedToMaster();
     }
     public override void OnDisconnected(DisconnectCause cause)

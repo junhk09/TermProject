@@ -6,7 +6,7 @@ public class Boss : MonoBehaviourPun
 {
     public int maxHP = 500;
     private int currentHP;
-
+    public float moveSpeed = 3f;
     public GameObject missile;
     public Transform missilePortA;
     public Transform missilePortB;
@@ -66,6 +66,12 @@ public class Boss : MonoBehaviourPun
     private void FixedUpdate()
     {
         FreezeRotation();
+        if (target != null && !isDead)
+        {
+            Vector3 dir = (target.position - transform.position).normalized;
+            rigid.MovePosition(transform.position + dir * moveSpeed * Time.fixedDeltaTime);
+            transform.LookAt(target); // 플레이어 방향 바라보기
+        }
     }
 
     IEnumerator Think()

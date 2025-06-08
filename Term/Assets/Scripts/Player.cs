@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using Photon.Pun;
 using TMPro;
-
+using System.Collections;
 public class Player : MonoBehaviourPun
 {
     public float speed;
@@ -17,9 +17,7 @@ public class Player : MonoBehaviourPun
     Rigidbody rigid;
     bool jDown;
     bool isJump;
-    bool iDown;
     bool fDown;
-
     public Weapon equipWeapon;
     bool isFireReady = true;
 
@@ -62,6 +60,10 @@ public class Player : MonoBehaviourPun
         Jump();
         Attack();
         UpdateHpUI();
+        if (HP <= 0)
+        {
+            Die();
+        }
     }
     void UpdateHpUI()
     {
@@ -82,6 +84,7 @@ public class Player : MonoBehaviourPun
         wDown = Input.GetButton("walk");
         jDown = Input.GetButtonDown("Jump");
         fDown = Input.GetButtonDown("Fire1");
+      
     }
 
     void Move()
@@ -136,22 +139,58 @@ public class Player : MonoBehaviourPun
         {
             isJump = false;
         }
+        if (collision.gameObject.CompareTag("Heart"))
+        {
+            Destroy(collision.gameObject);
+            HP += 20;
+            HP = Mathf.Min(100, HP);
+            UpdateHpUI();
+        }
+        if (collision.gameObject.CompareTag("Enemy"))
+        {
+            photonView.RPC("ChangeColor", RpcTarget.All);
+            HP -= 20;
+        }
     }
-
+   
     [PunRPC]
     public void TakeDamage(int damage)
     {
         if (!photonView.IsMine) return;
-
+     
         HP -= damage;
+        HP = Mathf.Max(0, HP);
+        UpdateHpUI();
         Debug.Log($"[Player] 피해 입음: {damage}, 남은 HP: {HP}");
-
+        photonView.RPC("ChangeColor", RpcTarget.All);
         if (HP <= 0)
         {
+           
             Die();
         }
     }
+    [PunRPC]
+    public void ChangeColor()
+    {
+        StartCoroutine(DamageColorFlash());
+    }
 
+    IEnumerator DamageColorFlash()
+    {
+        Renderer[] renderers = GetComponentsInChildren<Renderer>();
+
+        foreach (Renderer r in renderers)
+        {
+            r.material.color = Color.red;
+        }
+
+        yield return new WaitForSeconds(0.2f);
+
+        foreach (Renderer r in renderers)
+        {
+            r.material.color = Color.white;
+        }
+    }
     void Die()
     {
         Debug.Log("[Player] 사망 처리");

@@ -165,7 +165,7 @@ public class Player : MonoBehaviourPun
         photonView.RPC("ChangeColor", RpcTarget.All);
         if (HP <= 0)
         {
-           
+            HP = 0;
             Die();
         }
     }
@@ -194,12 +194,9 @@ public class Player : MonoBehaviourPun
     void Die()
     {
         Debug.Log("[Player] 사망 처리");
+        cshGameManager.instance.ShowGameOverUI();
+       
 
-        if (photonView.IsMine)
-        {
-            cshGameManager.instance.ShowGameOverUI();
-        }
-
-        this.enabled = false;
+        Destroy(this.gameObject);
     }
 }

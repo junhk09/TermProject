@@ -155,8 +155,12 @@ public class Boss : MonoBehaviourPun
         isDead = true;
         anim.SetTrigger("die");
         StopAllCoroutines();
-        cshGameManager.instance.ShowGameOverUI();
+        if (PhotonNetwork.IsMasterClient)
+        {
+            cshGameManager.instance.ShowGameOverUIForAll(); // 모든 플레이어에게 알림
+        }
         Destroy(gameObject, 3f);
+        
     }
 
     void FreezeRotation()

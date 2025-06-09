@@ -195,8 +195,9 @@ public class Player : MonoBehaviourPun
     {
         Debug.Log("[Player] 사망 처리");
         cshGameManager.instance.ShowGameOverUI();
-       
-
-        Destroy(this.gameObject);
+        if (photonView.IsMine)
+        {
+            PhotonNetwork.Destroy(gameObject);
+        }
     }
 }

@@ -52,6 +52,11 @@ public class cshGameManager : MonoBehaviourPun // 점수와 게임 오버 여부 및 게임 
         }
       
     }
+    public void ShowGameOverUIForAll()
+    {
+        PhotonView photonView = PhotonView.Get(this);
+        photonView.RPC("ShowGameOverUI", RpcTarget.All);
+    }
     [PunRPC]
     public void ShowGameOverUI()
     {

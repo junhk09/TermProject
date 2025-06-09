@@ -159,7 +159,7 @@ public class Boss : MonoBehaviourPun
         {
             cshGameManager.instance.ShowGameOverUIForAll(); // 모든 플레이어에게 알림
         }
-        Destroy(gameObject, 3f);
+        Destroy(gameObject);
         
     }
 

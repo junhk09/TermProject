@@ -62,6 +62,7 @@ public class Player : MonoBehaviourPun
         UpdateHpUI();
         if (HP <= 0)
         {
+            HP = 0;
             Die();
         }
     }
@@ -160,6 +161,7 @@ public class Player : MonoBehaviourPun
      
         HP -= damage;
         HP = Mathf.Max(0, HP);
+      
         UpdateHpUI();
         Debug.Log($"[Player] 피해 입음: {damage}, 남은 HP: {HP}");
         photonView.RPC("ChangeColor", RpcTarget.All);
